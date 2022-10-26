@@ -13,10 +13,10 @@ namespace SocialStories
 				_cards.Add(transform.GetChild(i).GetComponent<Card>());
 		}
 		
-		public void RefreshId() 
+		public void RefreshCardsId() 
 		{
 			for (int i = 0; i < _cards.Count; i++)
-				_cards[i].SetCardId(i);
+				_cards[i].SetId(i);
 		}
 
 		public void KillCard(int id)
@@ -25,24 +25,24 @@ namespace SocialStories
 			_cards.Remove(_cards[id]);
 		}
 
-		public void ChangeCardActiveState(bool active)
+		public void ChangeCardsActiveState(bool active)
 		{
-			foreach (var card in _cards)
-				card.CardActive(active);
+			foreach (Card card in _cards)
+				card.SetActivity(active);
 		}
 
-		public Transform Transform()
+		public Transform GetTransform()
 		{
 			return transform;
 		}
 
-		public Vector2 CardAnchoredPos(int id) 
+		public Vector2 GetCardAnchoredPos(int id) 
 		{
 			Vector2 position = transform.GetChild(id).GetComponent<RectTransform>().anchoredPosition;
 			return position;
 		}
 
-		public Card CurrentCard(int id) 
+		public Card GetCurrentCard(int id) 
 		{
 			return _cards[id]; 
 		}

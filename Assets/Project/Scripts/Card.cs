@@ -27,23 +27,23 @@ namespace SocialStories
 			_textDefaultColor = _text.color;
 		}
 
-		public void SetCardId(int id)
-		{
-			_id = id;
-		}
-
-		public void CardActive(bool active)
-		{
-			_isActive = active;
-		}
-
 		public void OnPointerDown(PointerEventData eventData)
 		{
 			if (!_isActive) return;
 			Game.Instance.StartAddingCard(_number, _rectTransform.anchoredPosition, _id);
+		}		
+
+		public void SetId(int id)
+		{
+			_id = id;
 		}
 
-		public void Invisibility(bool visible)
+		public void SetActivity(bool active)
+		{
+			_isActive = active;
+		}
+
+		public void SetInvisibility(bool visible)
 		{
 			if (!visible) 
 			{

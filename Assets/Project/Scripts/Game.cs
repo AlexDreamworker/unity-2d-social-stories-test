@@ -21,14 +21,14 @@ namespace SocialStories
 
 		void Update()
 		{
-			_cardsContainer.RefreshId();
+			_cardsContainer.RefreshCardsId();
 		}		
 
 		public void StartAddingCard(int number, Vector2 position, int id) 
 		{
 			_currentCardId = id;
 
-			_cardsContainer.ChangeCardActiveState(false);
+			_cardsContainer.ChangeCardsActiveState(false);
 
 			SpawnClone(number, position, id);
 			CheckSelection();
@@ -40,7 +40,7 @@ namespace SocialStories
 				_cardPrefabs[number], 
 				position, 
 				Quaternion.identity,
-				_cardsContainer.Transform()
+				_cardsContainer.GetTransform()
 				);
 			
 			_cloneTransform = _clone.GetComponent<RectTransform>();
@@ -48,23 +48,23 @@ namespace SocialStories
 			_cloneTransform.pivot = new Vector2(0.5f, 0.5f);
 			_cloneTransform.anchoredPosition = position;
 
-			_clone.transform.SetParent(_blockContainer.Transform());
-			_clone.GetComponent<Card>().CardActive(false);			
+			_clone.transform.SetParent(_blockContainer.GetTransform());
+			_clone.GetComponent<Card>().SetActivity(false);			
 		}
 
 		void CheckSelection()
 		{
-			int index = _blockContainer.CurrentIndex();
+			int index = _blockContainer.GetCurrentIndex();
 			
 			if (index == _clone.GetComponent<Card>().Number)
-				LerpAnimationAsyncSuccess(_cloneTransform.anchoredPosition, _blockContainer.CardAnchoredPos(), 0.4f);
+				LerpAnimAsyncSuccess(_cloneTransform.anchoredPosition, _blockContainer.GetCardAnchoredPos(), 0.4f);
 			else
-				LerpAnimationAsyncFail(_cloneTransform.anchoredPosition, _blockContainer.CardAnchoredPos(), 0.4f);
+				LerpAnimAsyncFail(_cloneTransform.anchoredPosition, _blockContainer.GetCardAnchoredPos(), 0.4f);
 			
-			_cardsContainer.CurrentCard(_currentCardId).Invisibility(true);
+			_cardsContainer.GetCurrentCard(_currentCardId).SetInvisibility(true);
 		}	
 		
-		async void LerpAnimationAsyncSuccess(Vector2 startPos, Vector2 targetPos, float timer)
+		async void LerpAnimAsyncSuccess(Vector2 startPos, Vector2 targetPos, float timer)
 		{
 			float elapsedTime = 0;
 			
@@ -75,14 +75,14 @@ namespace SocialStories
 				await Task.Delay(1);
 			}				
 
-			int index = _blockContainer.CurrentIndex();
+			int index = _blockContainer.GetCurrentIndex();
 			_cardsContainer.KillCard(_currentCardId);
-			_blockContainer.ActivateCard(index);
+			_blockContainer.SetActiveCard(index);
 
 			EndOfTurn();
 		}	
 		
-		async void LerpAnimationAsyncFail(Vector2 startPos, Vector2 targetPos, float timer)
+		async void LerpAnimAsyncFail(Vector2 startPos, Vector2 targetPos, float timer)
 		{
 			float elapsedTime = 0;
 			
@@ -94,10 +94,10 @@ namespace SocialStories
 			}
 
 			await Task.Delay(300);
-			_clone.transform.SetParent(_cardsContainer.Transform());
+			_clone.transform.SetParent(_cardsContainer.GetTransform());
 			
 			startPos = _cloneTransform.anchoredPosition;
-			targetPos = _cardsContainer.CardAnchoredPos(_currentCardId);
+			targetPos = _cardsContainer.GetCardAnchoredPos(_currentCardId);
 			elapsedTime = 0;
 			
 			while (elapsedTime < timer)
@@ -107,7 +107,7 @@ namespace SocialStories
 				await Task.Delay(1);
 			}
 
-			_cardsContainer.CurrentCard(_currentCardId).Invisibility(false);
+			_cardsContainer.GetCurrentCard(_currentCardId).SetInvisibility(false);
 
 			EndOfTurn();
 		}				
@@ -115,9 +115,9 @@ namespace SocialStories
 		void EndOfTurn()
 		{
 			Destroy(_clone.gameObject);
-			_cardsContainer.ChangeCardActiveState(true);
+			_cardsContainer.ChangeCardsActiveState(true);
 
-			if (!_blockContainer.CheckEndGame()) return;
+			if (!_blockContainer.CheckIfGameEnd()) return;
 
 			_tableGroup.SetActive(false);
 			_winScreen.SetActive(true);

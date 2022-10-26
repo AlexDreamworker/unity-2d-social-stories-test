@@ -4,12 +4,12 @@ namespace SocialStories
 {
 	public class BlockContainer : MonoBehaviour
 	{
-		public Transform Transform()
+		public Transform GetTransform()
 		{
 			return transform;
 		}
 
-		public Vector2 CardAnchoredPos()
+		public Vector2 GetCardAnchoredPos()
 		{
 			Vector2 position = Vector2.zero;
 
@@ -26,11 +26,11 @@ namespace SocialStories
 			return position;
 		}
 
-		public int CurrentIndex() 
+		public int GetCurrentIndex() 
 		{
 			int index = 0;
 
-			for (var i = 0; i < transform.childCount; i++) 
+			for (int i = 0; i < transform.childCount; i++) 
 			{
 				if (transform.GetChild(i).gameObject.activeSelf)
 					continue;
@@ -43,12 +43,12 @@ namespace SocialStories
 			return index;
 		}
 
-		public void ActivateCard(int index)
+		public void SetActiveCard(int index)
 		{
 			transform.GetChild(index).gameObject.SetActive(true);
 		}
 
-		public bool CheckEndGame() 
+		public bool CheckIfGameEnd() 
 		{
 			foreach(Transform child in transform)
 			{
